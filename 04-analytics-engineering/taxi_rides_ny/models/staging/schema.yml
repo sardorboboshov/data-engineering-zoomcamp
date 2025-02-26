@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: staging
-    database: kestra-449910
+    database: "{{ env_var('DBT_DATABASE', 'kestra-449910') }}"
     schema: trips_data_all
 
     tables:
