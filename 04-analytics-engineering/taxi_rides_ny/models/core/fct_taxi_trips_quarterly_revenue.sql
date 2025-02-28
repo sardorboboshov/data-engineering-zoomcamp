@@ -17,14 +17,7 @@ quarterly_revenue as (
     inner join dim_datetime on trips_unioned.pickup_datetime = dim_datetime.pickup_datetime
     group by 1,2,3
 )
--- WITH quarterly_revenue AS (
---     SELECT 
---         EXTRACT(YEAR FROM pickup_datetime) AS revenue_year,
---         EXTRACT(QUARTER FROM pickup_datetime) AS revenue_quarter,
---         SUM(total_amount) AS quarterly_revenue
---     FROM your_table
---     GROUP BY 1, 2
--- )
+
 SELECT 
     q1.revenue_year,
     q1.revenue_quarter,
@@ -37,4 +30,4 @@ FROM quarterly_revenue q1
 LEFT JOIN quarterly_revenue q2 
     ON q1.revenue_year = q2.revenue_year + 1 
     AND q1.revenue_quarter = q2.revenue_quarter
-ORDER BY q1.revenue_year, q1.revenue_quarter;
+ORDER BY q1.revenue_year, q1.revenue_quarter
