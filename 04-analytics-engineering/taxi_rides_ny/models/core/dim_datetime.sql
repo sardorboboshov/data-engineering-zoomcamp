@@ -5,9 +5,8 @@ with trips_data as (
 )
     select 
         pickup_datetime,
-        {{ dbt.date_part("year", "pickup_datetime") }} as revenue_year,
-        {{ dbt.date_part("quarter", "pickup_datetime") }} as revenue_quarter,
-        {{ dbt.date_part('year', 'pickup_datetime') }} || '/Q' || {{ dbt.date_trunc('quarter', 'pickup_datetime') }} AS revenue_year_quarter,
-        {{ dbt.date_part("month", "pickup_datetime") }} as revenue_month
-
+        EXTRACT(YEAR FROM {{ dbt.date_trunc("year", "pickup_datetime") }}) AS revenue_year,
+        EXTRACT(QUARTER FROM pickup_datetime) AS revenue_quarter,
+        EXTRACT(YEAR FROM {{ dbt.date_trunc("year", "pickup_datetime") }}) || '/Q' || EXTRACT(QUARTER FROM pickup_datetime) AS revenue_year_quarter,
+        EXTRACT(MONTH FROM {{ dbt.date_trunc("year", "pickup_datetime") }}) AS revenue_month
     from trips_data
