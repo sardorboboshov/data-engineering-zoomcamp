@@ -18,10 +18,10 @@ SELECT trips_unioned.service_type, dim_datetime.revenue_year, dim_datetime.reven
     100 * (tu.total_amount - tupq.total_amount) / (tu.total_amount) as yoy_revenue_growth
 
 FROM 
-    trips_unioned tu
-    inner join dim_datetime on tu.pickup_datetime = dim_datetime.pickup_datetime
-    inner join trips_unioned_previous_quarter tupq on EXTRACT(YEAR FROM tupq.pickup_datetime) = dim_datetime.revenue_year - 1
-    and  EXTRACT(QUARTER FROM tupq.pickup_datetime) = dim_datetime.revenue_quarter
+    trips_unioned 
+    inner join dim_datetime on trips_unioned.pickup_datetime = dim_datetime.pickup_datetime
+    inner join trips_unioned_previous_quarter on EXTRACT(YEAR FROM trips_unioned_previous_quarter.pickup_datetime) = dim_datetime.revenue_year - 1
+    and  EXTRACT(QUARTER FROM trips_unioned_previous_quarter.pickup_datetime) = dim_datetime.revenue_quarter
     where dim_datetime.revenue_year in (2019, 2020)
 group by 1,2,3
 order by 1,2,3
