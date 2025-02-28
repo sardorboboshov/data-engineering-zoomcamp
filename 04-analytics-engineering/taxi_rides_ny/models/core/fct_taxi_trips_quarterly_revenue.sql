@@ -9,7 +9,6 @@ with trips_unioned as (
 ), 
 dim_datetime as (
     select * from {{ ref('dim_datetime') }}
-    where borough != 'Unknown'
 )
 SELECT trips_unioned.service_type, dim_datetime.year, dim_datetime.quarter, 
     SUM(total_amount)
