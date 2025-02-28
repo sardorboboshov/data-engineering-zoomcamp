@@ -4,7 +4,7 @@
     )
 }}
 
-trips_unioned as (
+with trips_unioned as (
     select * from fact_trips
 ), 
 dim_datetime as (
