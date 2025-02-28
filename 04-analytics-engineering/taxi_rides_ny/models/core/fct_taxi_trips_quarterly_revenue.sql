@@ -19,6 +19,7 @@ quarterly_revenue as (
 )
 
 SELECT 
+    q1.service_type,
     q1.revenue_year,
     q1.revenue_quarter,
     q1.quarterly_revenue,
@@ -29,5 +30,5 @@ SELECT
 FROM quarterly_revenue q1
 LEFT JOIN quarterly_revenue q2 
     ON q1.revenue_year = q2.revenue_year + 1 
-    AND q1.revenue_quarter = q2.revenue_quarter
-ORDER BY q1.revenue_year, q1.revenue_quarter
+    AND q1.revenue_quarter = q2.revenue_quarter AND q1.service_type = q2.service_type
+ORDER BY q1.revenue_year, q1.revenue_quarter, q1.service_type
