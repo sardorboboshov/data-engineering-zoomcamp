@@ -5,7 +5,7 @@
 }}
 
 with trips_unioned as (
-    select * from fact_trips
+    select * from {{ ref('fact_trips') }}
 ), 
 dim_datetime as (
     select * from {{ ref('dim_datetime') }}
