@@ -10,18 +10,31 @@ with trips_unioned as (
 dim_datetime as (
     select * from {{ ref('dim_datetime') }}
 ),
-trips_unioned_previous_quarter as (
-    select * from {{ ref('fact_trips') }}
-)
-SELECT trips_unioned.service_type, dim_datetime.revenue_year, dim_datetime.revenue_quarter, 
-    SUM(total_amount) as total_amount,
-    100 * (tu.total_amount - tupq.total_amount) / (tu.total_amount) as yoy_revenue_growth
-
-FROM 
-    trips_unioned 
+quarterly_revenue as (
+    select trips_unioned.service_type, dim_datetime.revenue_year, dim_datetime.revenue_quarter, 
+    SUM(total_amount) as quarterly_revenue
+    from trips_unioned 
     inner join dim_datetime on trips_unioned.pickup_datetime = dim_datetime.pickup_datetime
-    inner join trips_unioned_previous_quarter on EXTRACT(YEAR FROM trips_unioned_previous_quarter.pickup_datetime) = dim_datetime.revenue_year - 1
-    and  EXTRACT(QUARTER FROM trips_unioned_previous_quarter.pickup_datetime) = dim_datetime.revenue_quarter
-    where dim_datetime.revenue_year in (2019, 2020)
-group by 1,2,3
-order by 1,2,3
+    group by 1,2,3
+)
+-- WITH quarterly_revenue AS (
+--     SELECT 
+--         EXTRACT(YEAR FROM pickup_datetime) AS revenue_year,
+--         EXTRACT(QUARTER FROM pickup_datetime) AS revenue_quarter,
+--         SUM(total_amount) AS quarterly_revenue
+--     FROM your_table
+--     GROUP BY 1, 2
+-- )
+SELECT 
+    q1.revenue_year,
+    q1.revenue_quarter,
+    q1.quarterly_revenue,
+    q2.quarterly_revenue AS last_year_revenue,
+    ROUND(
+        ((q1.quarterly_revenue - q2.quarterly_revenue) / NULLIF(q2.quarterly_revenue, 0)) * 100, 2
+    ) AS yoy_growth_percentage
+FROM quarterly_revenue q1
+LEFT JOIN quarterly_revenue q2 
+    ON q1.revenue_year = q2.revenue_year + 1 
+    AND q1.revenue_quarter = q2.revenue_quarter
+ORDER BY q1.revenue_year, q1.revenue_quarter;
