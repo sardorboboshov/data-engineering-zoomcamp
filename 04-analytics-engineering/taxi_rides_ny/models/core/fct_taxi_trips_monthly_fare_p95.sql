@@ -10,7 +10,7 @@ dim_datetime as (
     select * from {{ ref('dim_datetime') }} 
 )
 SELECT 
-    fact_trips.service_type, dim_datetime.year, dim_datetime.month,
+    fact_trips.service_type, dim_datetime.revenue_year, dim_datetime.revenue_month,
     PERCENTILE_CONT(fact_trips.fare_amount, 0.9) OVER (PARTITION BY fact_trips.service_type, dim_datetime.year, dim_datetime.month) AS p90_sale_amount,
     PERCENTILE_CONT(fact_trips.fare_amount, 0.95) OVER (PARTITION BY fact_trips.service_type, dim_datetime.year, dim_datetime.month) AS p95_sale_amount,
     PERCENTILE_CONT(fact_trips.fare_amount, 0.97) OVER (PARTITION BY fact_trips.service_type, dim_datetime.year, dim_datetime.month) AS p97_sale_amount
