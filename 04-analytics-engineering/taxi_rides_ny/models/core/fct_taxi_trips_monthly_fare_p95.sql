@@ -10,7 +10,7 @@ dim_datetime as (
     select * from {{ ref('dim_datetime') }} 
 )
 SELECT 
-    DISTINCT fact_trips.service_type, dim_datetime.revenue_year, dim_datetime.revenue_month, p97_sale_amount, p95_sale_amount, p90_sale_amount
+    DISTINCT service_type, revenue_year, revenue_month, p97_sale_amount, p95_sale_amount, p90_sale_amount
     FROM (
         SELECT 
             fact_trips.service_type, dim_datetime.revenue_year, dim_datetime.revenue_month,
