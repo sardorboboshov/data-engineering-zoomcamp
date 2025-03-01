@@ -17,4 +17,4 @@ SELECT
     
 FROM fact_trips inner join dim_datetime on fact_trips.pickup_datetime = dim_datetime.pickup_datetime
 where fact_trips.fare_amount > 0 and fact_trips.trip_distance > 0 
-    and fact_trips.payment_type_description not in  ('Cash', 'Credit card')
+    and fact_trips.payment_type_description in  ('Cash', 'Credit card')
